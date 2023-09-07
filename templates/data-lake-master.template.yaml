@@ -141,7 +141,7 @@ Conditions:
   CreateRedshift: !Equals
     - !Ref 'EnableRedshift'
     - 'yes'
-  UsingDefaultBucket: !Equals [!Ref QSS3BucketName, 'aws-quickstart']
+  UsingDefaultBucket: !Equals [!Ref QSS3BucketName, 'aws-ia-us-east-1']
 Parameters:
   AvailabilityZones:
     Description: The list of Availability Zones to use for the subnets in the VPC.
@@ -265,7 +265,7 @@ Parameters:
     ConstraintDescription: Quick Start bucket name can include numbers, lowercase
       letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen
       (-).
-    Default: aws-quickstart
+    Default: aws-ia-us-east-1
     Description: "S3 bucket where the Quick Start templates and scripts are installed.\
       \ If you decide to customize or extend the Quick Start for your own purposes,\
       \ use this parameter to specify the S3 bucket name you created for your\
@@ -281,7 +281,7 @@ Parameters:
     ConstraintDescription: Quick Start key prefix can include numbers, lowercase letters,
       uppercase letters, hyphens (-), and forward slashes (/). It cannot start or end
       with a forward slash (/) because they are automatically appended.
-    Default: quickstart-datalake-foundation/
+    Default: cfn-ps-datalake-foundation/
     Description: S3 key prefix used to simulate a folder for your copy of Quick Start
       assets. Specify a value if you decide to customize or extend the Quick Start for your own purposes.
       This prefix can include numbers, lowercase letters, uppercase letters, hyphens (-),
@@ -427,13 +427,13 @@ Resources:
         QSS3BucketName: !Ref 'QSS3BucketName'
         QSS3BucketRegion: !Ref 'QSS3BucketRegion'
         QSS3KeyPrefix: !Sub
-          - ${Prefix}submodules/quickstart-linux-bastion/
+          - ${Prefix}submodules/cfn-ps-linux-bastion/
           - Prefix: !Ref 'QSS3KeyPrefix'
         RemoteAccessCIDR: !Ref 'RemoteAccessCIDR'
         VPCID: !GetAtt 'VPCStack.Outputs.VPCID'
       TemplateURL:
         !Sub
-          - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-linux-bastion/templates/linux-bastion-entrypoint-existing-vpc.template.yaml'
+          - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/cfn-ps-linux-bastion/templates/linux-bastion-entrypoint-existing-vpc.template.yaml'
           - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
             S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
     Type: AWS::CloudFormation::Stack
@@ -519,7 +519,7 @@ Resources:
           - VPCCIDR
       TemplateURL:
         !Sub
-          - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-aws-vpc/templates/aws-vpc.template.yaml'
+          - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/cfn-ps-aws-vpc/templates/aws-vpc.template.yaml'
           - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
             S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
     Type: AWS::CloudFormation::Stack

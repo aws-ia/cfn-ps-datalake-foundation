@@ -366,7 +366,7 @@ Conditions:
   CreateRedshiftRole: !Equals
     - !Ref 'EnableRedshift'
     - 'yes'
-  UsingDefaultBucket: !Equals [!Ref QSS3BucketName, 'aws-quickstart']
+  UsingDefaultBucket: !Equals [!Ref QSS3BucketName, 'aws-ia-us-east-1']
 Parameters:
   EnableRedshift:
     AllowedValues:
