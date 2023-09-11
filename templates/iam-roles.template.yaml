@@ -20,7 +20,8 @@ Resources:
                   - logs:CreateLogStream
                   - logs:PutLogEvents
                 Effect: Allow
-                Resource: !Sub 'arn:${AWS::Partition}:logs:*:*:*'
+                Resource:
+                  Fn::Sub: arn:${AWS::Partition}:logs:*:*:*
             Version: '2012-10-17'
           PolicyName: LambdaLogging
         - PolicyDocument:
@@ -30,10 +31,10 @@ Resources:
                   - s3:DeleteObject
                 Effect: Allow
                 Resource:
-                  - !Join
-                    - ''
-                    - - !Ref 'RegionalLambdaBucketARN'
-                      - /*
+                  - Fn::Join:
+                      - ''
+                      - - Ref: RegionalLambdaBucketARN
+                        - /*
             Version: '2012-10-17'
           PolicyName: PutDeleteRegionalLambdaBucket
         - PolicyDocument:
@@ -42,7 +43,7 @@ Resources:
                   - s3:ListBucket
                   - s3:GetObject
                 Effect: Allow
-                Resource: "*"
+                Resource: '*'
             Version: '2012-10-17'
           PolicyName: ListGetQSSBucket
     Type: AWS::IAM::Role
@@ -52,7 +53,7 @@ Resources:
           ignore_checks:
             - EIAMPolicyWildcardResource
           ignore_reasons:
-            - EIAMPolicyWildcardResource: "Scope is limited to least privilege"
+            - EIAMPolicyWildcardResource: Scope is limited to least privilege
   ElasticSearchLambdaIAMPolicy:
     Properties:
       PolicyDocument:
@@ -65,20 +66,21 @@ Resources:
               - es:ESHttpPut
               - es:ESHttpGet
             Effect: Allow
-            Resource: !Join
-              - ''
-              - - 'arn:aws:es:'
-                - !Ref 'AWS::Region'
-                - ':'
-                - !Ref 'AWS::AccountId'
-                - :domain/
-                - datalake-quickstart
-                - '*'
+            Resource:
+              Fn::Join:
+                - ''
+                - - 'arn:aws:es:'
+                  - Ref: AWS::Region
+                  - ':'
+                  - Ref: AWS::AccountId
+                  - :domain/
+                  - datalake-quickstart
+                  - '*'
         Version: '2012-10-17'
       PolicyName: ElasticsearchLambdaPolicy
       Roles:
-        - !Ref 'RegisterKibanaDashboardRole'
-        - !Ref 'LambdaRole'
+        - Ref: RegisterKibanaDashboardRole
+        - Ref: LambdaRole
     Type: AWS::IAM::Policy
   KinesisStreamBucketRole:
     Properties:
@@ -87,7 +89,8 @@ Resources:
           - Action: sts:AssumeRole
             Condition:
               StringEquals:
-                sts:ExternalId: !Ref 'AWS::AccountId'
+                sts:ExternalId:
+                  Ref: AWS::AccountId
             Effect: Allow
             Principal:
               Service: firehose.amazonaws.com
@@ -103,10 +106,11 @@ Resources:
                   - s3:ListBucketMultipartUploads
                   - s3:PutObject
                 Effect: Allow
-                Resource: !Join
-                  - ''
-                  - - !Ref 'SubmissionsBucketARN'
-                    - '*'
+                Resource:
+                  Fn::Join:
+                    - ''
+                    - - Ref: SubmissionsBucketARN
+                      - '*'
             Version: '2012-10-17'
           PolicyName: KinesisBucketAccess
     Type: AWS::IAM::Role
@@ -129,7 +133,8 @@ Resources:
                   - logs:CreateLogStream
                   - logs:PutLogEvents
                 Effect: Allow
-                Resource: !Sub 'arn:${AWS::Partition}:logs:*:*:*'
+                Resource:
+                  Fn::Sub: arn:${AWS::Partition}:logs:*:*:*
             Version: '2012-10-17'
           PolicyName: LambdaLogging
         - PolicyDocument:
@@ -138,18 +143,18 @@ Resources:
                   - s3:GetObject
                 Effect: Allow
                 Resource:
-                  - !Join
-                    - ''
-                    - - !Ref 'SubmissionsBucketARN'
-                      - /*
-                  - !Join
-                    - ''
-                    - - !Ref 'CuratedDatasetsARN'
-                      - /*
-                  - !Join
-                    - ''
-                    - - !Ref 'PublishedDataARN'
-                      - /*
+                  - Fn::Join:
+                      - ''
+                      - - Ref: SubmissionsBucketARN
+                        - /*
+                  - Fn::Join:
+                      - ''
+                      - - Ref: CuratedDatasetsARN
+                        - /*
+                  - Fn::Join:
+                      - ''
+                      - - Ref: PublishedDataARN
+                        - /*
             Version: '2012-10-17'
           PolicyName: GetObjectsDatalake
     Type: AWS::IAM::Role
@@ -164,7 +169,7 @@ Resources:
               Service: redshift.amazonaws.com
         Version: '2012-10-17'
       ManagedPolicyArns:
-        - !Sub 'arn:${AWS::Partition}:iam::aws:policy/AWSGlueConsoleFullAccess'
+        - Fn::Sub: arn:${AWS::Partition}:iam::aws:policy/AWSGlueConsoleFullAccess
       Path: /
       Policies:
         - PolicyDocument:
@@ -176,14 +181,14 @@ Resources:
                   - s3:GetBucketLocation
                 Effect: Allow
                 Resource:
-                  - !Join
-                    - ''
-                    - - !Ref 'CuratedDatasetsARN'
-                      - '*'
-                  - !Join
-                    - ''
-                    - - !Ref 'PublishedDataARN'
-                      - '*'
+                  - Fn::Join:
+                      - ''
+                      - - Ref: CuratedDatasetsARN
+                        - '*'
+                  - Fn::Join:
+                      - ''
+                      - - Ref: PublishedDataARN
+                        - '*'
             Version: '2012-10-17'
           PolicyName: S3Access
     Type: AWS::IAM::Role
@@ -206,7 +211,8 @@ Resources:
                   - logs:CreateLogStream
                   - logs:PutLogEvents
                 Effect: Allow
-                Resource: !Sub 'arn:${AWS::Partition}:logs:*:*:*'
+                Resource:
+                  Fn::Sub: arn:${AWS::Partition}:logs:*:*:*
             Version: '2012-10-17'
           PolicyName: LambdaLogging
         - PolicyDocument:
@@ -215,10 +221,14 @@ Resources:
                   - s3:GetObject
                 Effect: Allow
                 Resource:
-                  - !Sub arn:${AWS::Partition}:s3:::aws-quickstart*/*
-                  - !Sub
-                    - arn:${AWS::Partition}:s3:::${S3Bucket}/*
-                    - S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
+                  - Fn::Sub: arn:${AWS::Partition}:s3:::aws-quickstart*/*
+                  - Fn::Sub:
+                      - arn:${AWS::Partition}:s3:::${S3Bucket}/*
+                      - S3Bucket:
+                          Fn::If:
+                            - UsingDefaultBucket
+                            - Fn::Sub: ${QSS3BucketName}-${AWS::Region}
+                            - Ref: QSS3BucketName
             Version: '2012-10-17'
           PolicyName: GetQSS3Bucket
     Type: AWS::IAM::Role
@@ -228,7 +238,7 @@ Resources:
           ignore_checks:
             - EIAMPolicyWildcardResource
           ignore_reasons:
-            - EIAMPolicyWildcardResource: "Scope is limited to least privilege"
+            - EIAMPolicyWildcardResource: Scope is limited to least privilege
   SageMakerExecutionRole:
     Type: AWS::IAM::Role
     Metadata:
@@ -238,8 +248,8 @@ Resources:
             - EIAMPolicyWildcardResource
             - EIAMPolicyActionWildcard
           ignore_reasons:
-            - EIAMPolicyWildcardResource: "Scope is limited to least privilege"
-            - EIAMPolicyActionWildcard: "Scope is limited to appropriate resource"
+            - EIAMPolicyWildcardResource: Scope is limited to least privilege
+            - EIAMPolicyActionWildcard: Scope is limited to appropriate resource
     Properties:
       AssumeRolePolicyDocument:
         Statement:
@@ -250,9 +260,9 @@ Resources:
             Action:
               - sts:AssumeRole
       ManagedPolicyArns:
-        - !Sub 'arn:${AWS::Partition}:iam::aws:policy/AmazonSageMakerFullAccess'
-        - !Sub 'arn:${AWS::Partition}:iam::aws:policy/CloudWatchLogsFullAccess'
-        - !Sub 'arn:${AWS::Partition}:iam::aws:policy/AmazonS3ReadOnlyAccess'
+        - Fn::Sub: arn:${AWS::Partition}:iam::aws:policy/AmazonSageMakerFullAccess
+        - Fn::Sub: arn:${AWS::Partition}:iam::aws:policy/CloudWatchLogsFullAccess
+        - Fn::Sub: arn:${AWS::Partition}:iam::aws:policy/AmazonS3ReadOnlyAccess
       Path: /service-role/
       Policies:
         - PolicyName: CuratedBucketS3BucketAccess
@@ -263,16 +273,17 @@ Resources:
                 Action:
                   - s3:*
                 Resource:
-                  - !Sub '${CuratedDatasetsARN}*'
+                  - Fn::Sub: ${CuratedDatasetsARN}*
         - PolicyName: SageMakerS3Access
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
-              - Sid: 'VisualEditor0'
+              - Sid: VisualEditor0
                 Effect: Allow
                 Action: s3:ListBucket
-                Resource: !Sub 'arn:${AWS::Partition}:s3:::SageMaker'
-              - Sid: 'VisualEditor1'
+                Resource:
+                  Fn::Sub: arn:${AWS::Partition}:s3:::SageMaker
+              - Sid: VisualEditor1
                 Effect: Allow
                 Action:
                   - s3:GetLifecycleConfiguration
@@ -307,8 +318,9 @@ Resources:
                   - s3:GetObjectVersionForReplication
                   - s3:GetBucketLocation
                   - s3:GetObjectVersio
-                Resource: !Sub 'arn:${AWS::Partition}:s3:::SageMaker/*'
-              - Sid: 'VisualEditor2'
+                Resource:
+                  Fn::Sub: arn:${AWS::Partition}:s3:::SageMaker/*
+              - Sid: VisualEditor2
                 Effect: Allow
                 Action:
                   - s3:ListAllMyBuckets
@@ -322,7 +334,7 @@ Resources:
           ignore_checks:
             - EIAMPolicyActionWildcard
           ignore_reasons:
-            - EIAMPolicyActionWildcard: "Scope limited by resource"
+            - EIAMPolicyActionWildcard: Scope limited by resource
     Properties:
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
@@ -344,7 +356,8 @@ Resources:
                   - logs:CreateLogGroup
                   - logs:CreateLogStream
                   - logs:PutLogEvents
-                Resource: !Sub 'arn:${AWS::Partition}:logs:*:*:*'
+                Resource:
+                  Fn::Sub: arn:${AWS::Partition}:logs:*:*:*
               - Effect: Allow
                 Action:
                   - sagemaker:*
@@ -352,7 +365,10 @@ Resources:
               - Effect: Allow
                 Action:
                   - iam:PassRole
-                Resource: !GetAtt 'SageMakerExecutionRole.Arn'
+                Resource:
+                  Fn::GetAtt:
+                    - SageMakerExecutionRole
+                    - Arn
               - Effect: Allow
                 Action:
                   - ec2:*
@@ -361,12 +377,16 @@ Resources:
                 Action:
                   - s3:*
                 Resource:
-                  - !Sub 'arn:${AWS::Partition}:s3:::${QSS3BucketName}*'
+                  - Fn::Sub: arn:${AWS::Partition}:s3:::${QSS3BucketName}*
 Conditions:
-  CreateRedshiftRole: !Equals
-    - !Ref 'EnableRedshift'
-    - 'yes'
-  UsingDefaultBucket: !Equals [!Ref QSS3BucketName, 'aws-ia-us-east-1']
+  CreateRedshiftRole:
+    Fn::Equals:
+      - Ref: EnableRedshift
+      - 'yes'
+  UsingDefaultBucket:
+    Fn::Equals:
+      - Ref: QSS3BucketName
+      - aws-ia-us-east-1
 Parameters:
   EnableRedshift:
     AllowedValues:
@@ -396,23 +416,44 @@ Parameters:
 Outputs:
   LambdaRoleARN:
     Description: ARN of LambdaRole
-    Value: !GetAtt 'LambdaRole.Arn'
+    Value:
+      Fn::GetAtt:
+        - LambdaRole
+        - Arn
   CopyLambdaDeploymentRoleARN:
     Description: ARN of CopyLambdaDeploymentRole
-    Value: !GetAtt 'CopyLambdaDeploymentRole.Arn'
+    Value:
+      Fn::GetAtt:
+        - CopyLambdaDeploymentRole
+        - Arn
   QSRedshiftRoleARN:
     Description: ARN of QSRedshiftRole
     Condition: CreateRedshiftRole
-    Value: !GetAtt 'QSRedshiftRole.Arn'
+    Value:
+      Fn::GetAtt:
+        - QSRedshiftRole
+        - Arn
   RegisterKibanaDashboardRoleARN:
     Description: ARN of RegisterKibanaDashboardRole
-    Value: !GetAtt 'RegisterKibanaDashboardRole.Arn'
+    Value:
+      Fn::GetAtt:
+        - RegisterKibanaDashboardRole
+        - Arn
   KinesisStreamBucketRoleARN:
     Description: ARN of KinesisStreamBucketRole
-    Value: !GetAtt 'KinesisStreamBucketRole.Arn'
+    Value:
+      Fn::GetAtt:
+        - KinesisStreamBucketRole
+        - Arn
   SageMakerExecutionRoleARN:
     Description: Sage Maker Execution Role ARN
-    Value: !GetAtt 'SageMakerExecutionRole.Arn'
+    Value:
+      Fn::GetAtt:
+        - SageMakerExecutionRole
+        - Arn
   CreateNotebookFunctionExecuteRoleARN:
     Description: Sage Maker Execution Role ARN
-    Value: !GetAtt 'CreateNotebookFunctionExecuteRole.Arn'
+    Value:
+      Fn::GetAtt:
+        - CreateNotebookFunctionExecuteRole
+        - Arn

@@ -1,11 +1,9 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'AWS CloudFormation templates to create SageMaker notebook. (qs-1s3s21nag)'
-
+Description: AWS CloudFormation templates to create SageMaker notebook. (qs-1s3s21nag)
 Parameters:
   NotebookInstanceName:
     AllowedPattern: '[A-Za-z0-9-]{1,63}'
-    ConstraintDescription: Must be unique within your account in an AWS Region.
-      Maximum of 63 alphanumeric characters. Can include hyphens (-).
+    ConstraintDescription: Must be unique within your account in an AWS Region. Maximum of 63 alphanumeric characters. Can include hyphens (-).
     Type: String
     Default: NotebookInstanceName
     Description: Name of the Amazon SageMaker Notebook instance.
@@ -46,25 +44,27 @@ Metadata:
 Resources:
   NotebookCloudWatchLogGroup:
     Type: AWS::Logs::LogGroup
-
   NotebookInstance:
-    Type: "AWS::SageMaker::NotebookInstance"
+    Type: AWS::SageMaker::NotebookInstance
     Properties:
-      InstanceType: !Ref "NotebookInstanceType"
-      NotebookInstanceName: !Ref "NotebookInstanceName"
-      RoleArn: !Ref "SageMakerExecutionRoleArn"
-
+      InstanceType:
+        Ref: NotebookInstanceType
+      NotebookInstanceName:
+        Ref: NotebookInstanceName
+      RoleArn:
+        Ref: SageMakerExecutionRoleArn
 Outputs:
   SageMakerNotebookURL:
     Description: SageMaker Notebook URL
-    Value: !Join
-      - ""
-      - - "https://"
-        - !Ref "NotebookInstanceName"
-        - ".notebook."
-        - !Ref "AWS::Region"
-        - ".sagemaker.aws/tree?"
+    Value:
+      Fn::Join:
+        - ''
+        - - https://
+          - Ref: NotebookInstanceName
+          - .notebook.
+          - Ref: AWS::Region
+          - .sagemaker.aws/tree?
   NotebookInstanceName:
     Description: SageMaker Instance Name
     Value:
-      !Ref 'NotebookInstanceName'
+      Ref: NotebookInstanceName
