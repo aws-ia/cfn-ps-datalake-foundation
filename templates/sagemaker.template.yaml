@@ -68,3 +68,6 @@ Outputs:
     Description: SageMaker Instance Name
     Value:
       Ref: NotebookInstanceName
+  CreateNotebookFunctionExecuteRoleArn:
+    Value:
+      Ref: CreateNotebookFunctionExecuteRoleArn

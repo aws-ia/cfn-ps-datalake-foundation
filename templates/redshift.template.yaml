@@ -93,6 +93,13 @@ Conditions:
       - 'true'
 Resources:
   RedshiftCluster:
+    Metadata:
+      cfn-lint:
+        config:
+          ignore_checks:
+            - ERedshiftClusterEncrypted
+          ignore_reasons:
+            - ERedshiftClusterEncrypted: Encrypted is configurable.
     Properties:
       AutomatedSnapshotRetentionPeriod:
         Ref: RedshiftSnapshotRetention

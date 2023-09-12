@@ -868,3 +868,10 @@ Outputs:
       Fn::GetAtt:
         - IAMRolesStack
         - Outputs.QSRedshiftRoleARN
+  AvailabilityZones:
+    Value: !Join
+        - ','
+        - !Ref AvailabilityZones
+  KeyPairName:
+    Value:
+      Ref: KeyPairName

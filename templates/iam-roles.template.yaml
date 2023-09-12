@@ -457,3 +457,6 @@ Outputs:
       Fn::GetAtt:
         - CreateNotebookFunctionExecuteRole
         - Arn
+  QSS3BucketRegion:
+    Value:
+      Ref: QSS3BucketRegion
