@@ -156,7 +156,7 @@ Conditions:
   UsingDefaultBucket:
     Fn::Equals:
       - Ref: QSS3BucketName
-      - aws-ia-us-east-1
+      - aws-ia
 Parameters:
   AvailabilityZones:
     Description: List of Availability Zones to use for the VPC subnets. You must specify two Availability Zones.
@@ -290,7 +290,7 @@ Parameters:
   QSS3BucketName:
     AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
     ConstraintDescription: Quick Start bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).
-    Default: aws-ia-us-east-1
+    Default: aws-ia
     Description: S3 bucket where the Quick Start templates and scripts are installed. If you decide to customize or extend the Quick Start for your own purposes, use this parameter to specify the S3 bucket
       name you created for your Quick Start assets. The bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-), but should not start or end with a hyphen.
     Type: String

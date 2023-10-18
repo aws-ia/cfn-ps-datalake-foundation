@@ -386,7 +386,7 @@ Conditions:
   UsingDefaultBucket:
     Fn::Equals:
       - Ref: QSS3BucketName
-      - aws-ia-us-east-1
+      - aws-ia
 Parameters:
   EnableRedshift:
     AllowedValues:
