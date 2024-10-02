@@ -1,4 +1,8 @@
 # quickstart-datalake-47lining
+## Deprecation Notice
+
+:x: This repository is subject to deprecation in Q4 2024. For more details, [please review this announcement](https://github.com/aws-ia/.announcements/issues/1). 
+
 ## Data Lake Foundation on the AWS Cloud
 
 This Quick Start deploys a data lake foundation that integrates Amazon Web Services (AWS) services such as Amazon Simple Storage Service (Amazon S3), Amazon Redshift, Amazon Kinesis, Amazon Athena, Amazon Elasticsearch Service (Amazon ES), and Amazon QuickSight.
